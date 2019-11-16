@@ -16,3 +16,4 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Request)
 admin.site.register(SubjectCode)
+admin.site.register(FinalPapers)

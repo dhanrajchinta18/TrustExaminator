@@ -16,17 +16,19 @@
 <h4>Received Question Papers</h4>
 <hr>
 
+{% for teacher in queryset %}
 <div class="card bg-light text-dark flip" id="{{prequest.id}}">
 	<div class="card-body">
 	  	<div class="details" id="details">
-	  		Subject Code: <span style="color: #49688e;">{{prequest.s_code}}</span><br>
-	  		Course: <span style="color: #49688e;">{{request.user.course}}</span><br>
-	  		Semester: <span style="color: #49688e;">{{request.user.semester}}</span><br>
-	  		Branch: <span style="color: #49688e;">{{request.user.branch}}</span><br>
-	  		Subject: <span style="color: #49688e;">{{request.user.subject}}</span><br>
-	  		Question Paper: <span style="color: #49688e;"></span><br>
+	  		Subject Code: <span style="color: #49688e;">{{teacher.s_code}}</span><br>
+	  		Course: <span style="color: #49688e;">{{teacher.course}}</span><br>
+	  		Semester: <span style="color: #49688e;">{{teacher.semester}}</span><br>
+	  		Branch: <span style="color: #49688e;">{{teacher.branch}}</span><br>
+	  		Subject: <span style="color: #49688e;">{{teacher.subject}}</span><br>
+	  		Question Paper: <span><a href="{{teacher.paper.url}}" style="color: #49688e;" target="_blank">Download Paper</a></span><br>
   		</div>
 	</div>
 </div><br>
+{% endfor %}
 
 {% endblock %}

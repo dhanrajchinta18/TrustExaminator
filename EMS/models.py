@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
-from ipfs_storage import InterPlanetaryFileSystemStorage
 from django.contrib.postgres.fields import ArrayField
 
 def teacherID():
@@ -73,12 +72,22 @@ class Request(models.Model):
 	q_pattern = models.FileField(default=None)
 	deadline = models.DateField(default=datetime.date.today)
 	status = models.CharField(max_length=10,default='Pending')
-	paper = models.FileField(storage=InterPlanetaryFileSystemStorage())
-	enc_field = ArrayField(ArrayField(models.BinaryField(max_length=2000,default="None")),default=list)
+	enc_field = ArrayField(models.BinaryField(max_length=500,default=None),default=list)
 	private_key = models.FileField(default=None)
 
 	def __str__(self):
 		return self.tusername
+
+class FinalPapers(models.Model):
+	s_code = models.CharField(max_length=7,default="None")
+	course = models.CharField(max_length=4,default='None')
+	semester = models.CharField(max_length=4,default='None')
+	branch = models.CharField(max_length=40,default='None')
+	subject = models.CharField(max_length=30,default='None')
+	paper = models.FileField(default=None)
+
+	def __str__(self):
+		return self.s_code
 
 class SubjectCode(models.Model):
 	s_code = models.CharField(max_length=7)

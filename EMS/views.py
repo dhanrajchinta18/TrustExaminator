@@ -9,7 +9,7 @@ from .encryption import *
 from .a_encryption import *
 from django.conf import settings
 from django.core.files import File
-import os, requests
+import os, requests, ipfsapi
 
 # Create your views here.
 def user_login(request):
@@ -40,17 +40,18 @@ def teacher_dashboard(request):
 		else:
 			paper = request.FILES.get('paper',None)
 			key = encrypt_file(paper)
-			file_ = open(os.path.join(settings.ENCRYPTION_ROOT,str(paper)+'.encrypted'),'rb')
-			s_file = File(file_)
-			queryset, created = Request.objects.update_or_create(tusername=request.user.username,defaults = {'status':'Uploaded'})
-			store = Request.objects.get(tusername=request.user.username)
-			store.paper.save(str(paper)+'.encrypted',s_file,save=True)
-			hash_id = Request.objects.filter(tusername=request.user.username).values('paper')
-			arr = a_encryption(hash_id[0]['paper'],key,request.user.teacher_id)
+			api = ipfsapi.connect('127.0.0.1', 5001)
+			new_file = api.add('static/encrypted_files/'+str(paper)+'.encrypted')
+			hash_id = new_file['Hash']
+			arr = a_encryption(hash_id,key,request.user.teacher_id)
 			file_ = open(os.path.join(settings.ENCRYPTION_ROOT,request.user.teacher_id+'_private_key.pem'),'rb')
 			p_file = File(file_)
-			queryset,created = Request.objects.update_or_create(tusername=request.user.username,defaults = {'enc_field':arr})
+			store = Request.objects.get(tusername=request.user.username)
 			store.private_key.save(request.user.teacher_id+'_private_key.pem',p_file,save=True)
+			store.enc_field = arr
+			store.status = 'Uploaded'
+			store.save()
+			os.remove('static/encrypted_files/'+str(paper)+'.encrypted')
 			messages.success(request, 'Paper uploaded successfully!', extra_tags='upload')
 	return render(request,'teacher.html',{'p_request':p_request,'a_request':a_request})
 
@@ -63,9 +64,20 @@ def coe_dashboard(request):
 		Request.objects.filter(s_code=s_code).exclude(id=t_id).delete()
 		queryset,created = Request.objects.update_or_create(id=t_id,defaults={'status':'Finalized'})
 		messages.success(request, 'Paper has been finalized and sent to respective superintendent.')
-	requests = Request.objects.values('tusername','status')
+		f_papers = Request.objects.filter(id=t_id).values('tusername','enc_field','private_key','s_code')
+		for paper in f_papers:
+			teacher = CustomUser.objects.filter(username=paper['tusername']).values('course','semester','branch','subject')
+			values = a_decryption([paper['enc_field'],paper['private_key']])
+			hash_id = values[1].decode('utf-8')
+			r = requests.get('http://localhost:8080/ipfs/'+hash_id)
+			final_paper = decrypt_file(r,values[0],paper['s_code'])
+			FinalPapers.objects.create(s_code=paper['s_code'],course=teacher[0]['course'],semester=teacher[0]['semester'],
+				branch=teacher[0]['branch'],subject=teacher[0]['subject'])
+			final = FinalPapers.objects.latest('id')
+			final.paper.save(paper['s_code']+'.pdf',final_paper,save=True)
+	requests_ = Request.objects.values('tusername','status')
 	arr = []
-	for r in requests:
+	for r in requests_:
 		name = CustomUser.objects.filter(username=r['tusername']).values('first_name','last_name')
 		arr.append({'name':name[0]['first_name']+ " " + name[0]['last_name'],'status':r['status']})
 	return render(request,'coe.html',{'arr':arr})
@@ -73,10 +85,8 @@ def coe_dashboard(request):
 @login_required(login_url='login')
 @csrf_exempt
 def st_dashboard(request):
-	f_papers = Request.objects.filter(status='Finalized').values('tusername','enc_field','private_key','paper')
-	r = requests.get('http://localhost:8080/ipfs/'+f_papers[0]['paper'])
-	#arr = a_decryption([f_papers[0]['enc_field'],f_papers[0]['private_key']])
-	return render(request,'superintendent.html')
+	queryset = FinalPapers.objects.all()
+	return render(request,'superintendent.html',{'queryset':queryset})
 
 def get_teachers(request):
 	course = request.POST.get('course',None)
@@ -85,7 +95,7 @@ def get_teachers(request):
 	subject = request.POST.get('subject',None)
 	queryset1 = Request.objects.values('tusername').distinct()
 	s_code = SubjectCode.objects.filter(subject=subject).values()
-	queryset2 = Request.objects.filter(s_code=s_code[0]['s_code'],status='Uploaded').values()
+	queryset2 = Request.objects.filter(s_code=s_code[0]['s_code'],status='Uploaded').values('id')
 	queryset = CustomUser.objects.filter(course=course,semester=semester,branch=branch,subject=subject).exclude(username__in=queryset1).values()
 	data = { 'queryset':list(queryset),'s_code':s_code[0]['s_code'],'queryset2':list(queryset2) }
 	return JsonResponse(data)

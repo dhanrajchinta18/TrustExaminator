@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
 from django.conf import settings
+from django.core.files import File
 import os
 
 def encrypt_file(paper):
@@ -19,17 +20,17 @@ def encrypt_file(paper):
 	return key
 
 
-def decrypt_file(paper):
-
-	from cryptography.fernet import Fernet
-	input_file = 'paper.encrypted'
-	output_file = 'decrypted_paper.pdf'
-
-	with open(input_file, 'rb') as f:
-	    data = f.read()
-
+def decrypt_file(paper,key,s_code):
+	
 	fernet = Fernet(key)
-	encrypted = fernet.decrypt(data)
+	paper = paper.text.encode('utf-8')
 
-	with open(output_file, 'wb') as f:
-	    f.write(encrypted)
+	decrypted = fernet.decrypt(paper)
+	
+	with open('media/'+s_code+'.pdf','wb') as f:
+		f.write(decrypted)
+
+	file_ = open('media/'+s_code+'.pdf','rb')
+	f_file = File(file_)
+
+	return f_file

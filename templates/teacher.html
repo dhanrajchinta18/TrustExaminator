@@ -89,7 +89,7 @@ $(document).ready(function(){
               Question Pattern: <a href="{{arequest.q_pattern.url}}" target="_blank" style="color: #49688e;">Question Pattern</a><br>
               Total Marks: <span style="color: #49688e;">50</span><br>
               Deadline: <span style="color: #49688e;">{{arequest.deadline}}</span><br>
-              {% if not arequest.paper%}
+              {% if not arequest.private_key %}
               <br>
               <form method="POST" enctype="multipart/form-data">{% csrf_token %}
                 <div class="custom-file mb-3">
@@ -113,9 +113,7 @@ $(document).ready(function(){
                   </div>
               </form>
                 <button class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="u_btn" disabled>Upload</button>
-              {% else %}
-              Uploaded file: <a href="{{arequest.paper.url}}" target="_blank" style="color: #49688e;">{{arequest.paper}}</a><br>
-              {% endif %}
+                {% endif %}
             </div>
           </div>
         </div><br>
