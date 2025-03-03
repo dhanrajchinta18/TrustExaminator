@@ -9,7 +9,7 @@ from .encryption import *
 from .a_encryption import *
 from django.conf import settings
 from django.core.files import File
-import os, requests, ipfsapi
+import os, requests, ipfshttpclient
 
 # Create your views here.
 def user_login(request):
@@ -40,7 +40,7 @@ def teacher_dashboard(request):
 		else:
 			paper = request.FILES.get('paper',None)
 			key = encrypt_file(paper)
-			api = ipfsapi.connect('127.0.0.1', 5001)
+			api = ipfshttpclient.connect()
 			new_file = api.add('static/encrypted_files/'+str(paper)+'.encrypted')
 			hash_id = new_file['Hash']
 			arr = a_encryption(hash_id,key,request.user.teacher_id)
@@ -69,7 +69,8 @@ def coe_dashboard(request):
 			teacher = CustomUser.objects.filter(username=paper['tusername']).values('course','semester','branch','subject')
 			values = a_decryption([paper['enc_field'],paper['private_key']])
 			hash_id = values[1].decode('utf-8')
-			r = requests.get('http://localhost:8080/ipfs/'+hash_id)
+			#r = requests.get('http://localhost:8080/ipfs/'+hash_id)
+			r = requests.get(f'http://127.0.0.1:8080/ipfs/{hash_id}')
 			final_paper = decrypt_file(r,values[0],paper['s_code'])
 			FinalPapers.objects.create(s_code=paper['s_code'],course=teacher[0]['course'],semester=teacher[0]['semester'],
 				branch=teacher[0]['branch'],subject=teacher[0]['subject'])

@@ -85,6 +85,7 @@ class FinalPapers(models.Model):
 	branch = models.CharField(max_length=40,default='None')
 	subject = models.CharField(max_length=30,default='None')
 	paper = models.FileField(default=None)
+	blockchain_status = models.CharField(max_length=20, default="Pending")  # Add this field
 
 	def __str__(self):
 		return self.s_code
