@@ -1,0 +1,97 @@
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.146.1-microsoft-standard-WSL2 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Mar  4 00:25:58 IST 2025
+
+  System load:  0.0                 Processes:             58
+  Usage of /:   0.4% of 1006.85GB   Users logged in:       1
+  Memory usage: 11%                 IPv4 address for eth0: 172.21.141.221
+  Swap usage:   0%
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+1 update can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+10 additional security updates can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+
+This message is shown once a day. To disable it please create the
+/root/.hushlogin file.
+root@LAPTOP-SEOPFS2E:~# ls
+EMS           go-ipfs_v0.7.0_linux-amd64.tar.gz            project
+EMSbk         go1.13.linux-amd64.tar.gz                    snap
+EMSbk.tar.gz  go1.20.5.linux-amd64.tar.gz                  test.txt
+EMStmp        go1.20.5.linux-amd64.tar.gz:Zone.Identifier  testdisk.log
+go            kubo                                         wget-log
+go-ipfs       kubo_v0.32.1_linux-amd64.tar.gz
+root@LAPTOP-SEOPFS2E:~# cd .ssh
+root@LAPTOP-SEOPFS2E:~/.ssh# ls
+id_rsa  id_rsa.pub
+root@LAPTOP-SEOPFS2E:~/.ssh# cd id
+-bash: cd: id: No such file or directory
+root@LAPTOP-SEOPFS2E:~/.ssh# cd id_rsa
+-bash: cd: id_rsa: Not a directory
+root@LAPTOP-SEOPFS2E:~/.ssh# cat id_rsa
+-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
+NhAAAAAwEAAQAAAgEAz35K53Tyaig4X7PLVOrOsSpzeUq4VEHooeEDy/E33m+rLLh4q4wR
+0JFevr3nnPBksixOlPEV2/E6WxzFxp3TVhaUH/eOV2SULO483dvXbdgk3in8xjcV6gXlT8
+Y47UPlnSvWLMwLseCf+Fd17HS0FIyV+2vyGYApUczKqKhEAKmK1glw34kEr+ISCBjIqb1y
+33sZRTDQbjoedI2UwpVtwIAaWd8worm5y28SkzmvYPQHopxs5Cgm8fq8tpqj0kD6o6lry4
+WlUnrM9oRctSrePMfZ6z6Jj54jWycXXEXk2ChocAIbQizZhogHNjlOWVL4PMVzqS+rbhKk
+P+o7otd0IiNwJrMxjiggxpAFTjgeqAXHzViQHMSaKYpAuExkKGnrVPm4dZCAGmIVzL1G+M
+gViqFBU1hlQAsqz05TDU8dMG/J585S3O9ey8w7EBb3AdSMWKcKulrI0gzOwfcVht7xirTh
+/zdK710wuN/a7zza7oor9sM7jp95XHbnT5Qkmta7+WvyvppTdxyGb3dRL4+5s5Ir6cZOxK
+MN+kqzois7+1oa/Io0uVaWxicJ/hcDmuaofodiwsHcp4mUAqjrAMeXJWYCSQK8SW8B7h/s
+ch5EwYs3aMf6xgVwyBqBdUoZh9bll6isytbT/8uMDMre5QNwA73j33NG+XvBVhQcO+/sD7
+UAAAdQ7haANu4WgDYAAAAHc3NoLXJzYQAAAgEAz35K53Tyaig4X7PLVOrOsSpzeUq4VEHo
+oeEDy/E33m+rLLh4q4wR0JFevr3nnPBksixOlPEV2/E6WxzFxp3TVhaUH/eOV2SULO483d
+vXbdgk3in8xjcV6gXlT8Y47UPlnSvWLMwLseCf+Fd17HS0FIyV+2vyGYApUczKqKhEAKmK
+1glw34kEr+ISCBjIqb1y33sZRTDQbjoedI2UwpVtwIAaWd8worm5y28SkzmvYPQHopxs5C
+gm8fq8tpqj0kD6o6lry4WlUnrM9oRctSrePMfZ6z6Jj54jWycXXEXk2ChocAIbQizZhogH
+NjlOWVL4PMVzqS+rbhKkP+o7otd0IiNwJrMxjiggxpAFTjgeqAXHzViQHMSaKYpAuExkKG
+nrVPm4dZCAGmIVzL1G+MgViqFBU1hlQAsqz05TDU8dMG/J585S3O9ey8w7EBb3AdSMWKcK
+ulrI0gzOwfcVht7xirTh/zdK710wuN/a7zza7oor9sM7jp95XHbnT5Qkmta7+WvyvppTdx
+yGb3dRL4+5s5Ir6cZOxKMN+kqzois7+1oa/Io0uVaWxicJ/hcDmuaofodiwsHcp4mUAqjr
+AMeXJWYCSQK8SW8B7h/sch5EwYs3aMf6xgVwyBqBdUoZh9bll6isytbT/8uMDMre5QNwA7
+3j33NG+XvBVhQcO+/sD7UAAAADAQABAAACAQCOFf+ZC95Mj4o7DtW4Kqqra1RzxJUBLbjt
+0TZWW7JUYcen8hK/9kTkvAdTOpv2Pi/WSrztBUJgwImjhspwPfdQRlncohsZAUjuk52el0
+Kod5CXic0MtwAMp0jmHekxoIMF49TgDEId5qHk349jAm+merbh2oOIrticqU5FvCQFCBSI
+iSKAEEXjYz3RyZbvlUmqe5NMbCbutGHSknlB3i2v2okw7cNSSzhNdJwVsTTFgZYQ5mkyu8
+QfhAHiUXbJLbH0jLnCPpx9JJZiYTVS4i4ZFQnHK6XrcPDpJJW8nCgfVVxfBzI/WJMEqvW1
+Tfy28jgG9XdEbd5Im/9ZvT5lPoDI+pcoQ/PnldvgumQ+DIr5NA0jxueGVXyII9FGvNjyPR
+QwensGEAihj7wOshFt3woDFYPnyYye6qJ4RbRU4yBiaur+8kFV8TATGyMVbOrXeMCx7Ne3
+lFDxNeSQedDl8OyDggCM0agwumu4bjUxCu3YJj8S7HoU6IBhZOSBYWiikYjS6+RR617hr/
+l++XiZ1rPBC1D+VWHkYF0E+QZLQMwd94dh+RKRZL8xwKxL6WRjm/e0INMzoVLTb/1tJ1Gj
+vIVIDXr7KW5LIrQYhLZW/3yGipy30ga33mKRCXAutQbOIePybn6xU4Y53jLTPlQzbOmfpZ
+1Go/5yXegFsxwpSFRaqQAAAQBfZG+OEKUoQnSF3I2lxD9nqsOEfxJUNoR8MeA8cU7GFufR
+ohFL8zRMY/Vjdbn8DrditTkCKZfyBBYG8pyWnS4nUQKHhh+GDoYeMWkG679kkvDqIfp1N0
+SkW6JKv5ovx2kFy4iFm/sM9vfRGrPsSn6T2Tl9rJUwpjjz04/plOlmlXF8FteYbOFCoQWU
+4jWZvmDYYZZw3nk5j72CX7MhmjBC0ByEgT2Oh0SSRGPIQrdWsc5BOxMSR+FKsyOnkcFctL
+nzIaNSsV5NxV+Hmi/+x11RI2y5pDfqYPz7yHbYvZsS2W4C9Chvz1deYyMAKVHGdXTT7mtV
+WuxG6njLbx6r3HZ3AAABAQD+43+jJghgMnnbNWep0bfGCoXXN3QmVD8YTy6fUPrvIPwvVW
+pa7XIIYcbF6zK00PT+df9Zu+DE4zFATYvbbkxGEngsAtK0+aYdx3HNTeQApfUexw926VmU
+CqgR9mXiTkg5VbhB3f6i17afieXrk5VyAwV4AIRSBpKDIJwyvVNdzi7vjsMMSxG7nYAeSx
+MJtx3PEtmXh19CI/zssJO8pJh1tgI8H6yrdnkYgua3VGl52H7m5W1xR0KAJaNU1nJ7uxif
+IcpqkVE4KRSjSi23tmT+vy8StTLr/W/iXSpNBU9Fx2S9nNYYuyLnYPkOXpKW7cpWZMMEeJ
+WKizvZqwTt7BdXAAABAQDQZeRvaNBw38L3qV7yje9xzH/gHGzO25yRN9XIaXeIjuvhFOcG
+tp7D1zGjWBPhRo65lUzpv0NIJJN6V/+oebTa4r6Kem7/jIRYEFYmhTAytJMTM5zy0Lu1vE
+XOEXOBzxnUl7Q66QTt48GzgELlhLWVkaIzKfcEu7ybs5bter4ZYmh+D4CSGeQUKw3t0ZQI
+nosibclJcJO9+nHiVZXbyaYRk56QozXy9qUcI1SJoehZqUPzXcNE12avux+m9cTlwdosxg
+ujTkyTccyUOOAM9G9gxGBG1RjE2j44BU5Y5ihLSOlIrP93K/bpgOtdoS4x4n/HDPQ+ftu1
+djLmHCBhrOXTAAAAGWRoYW5yYWpjaGludGExOEBnbWFpbC5jb20B
+-----END OPENSSH PRIVATE KEY-----
+root@LAPTOP-SEOPFS2E:~/.ssh# cat id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDPfkrndPJqKDhfs8tU6s6xKnN5SrhUQeih4QPL8Tfeb6ssuHirjBHQkV6+veec8GSyLE6U8RXb8TpbHMXGndNWFpQf945XZJQs7jzd29dt2CTeKfzGNxXqBeVPxjjtQ+WdK9YszAux4J/4V3XsdLQUjJX7a/IZgClRzMqoqEQAqYrWCXDfiQSv4hIIGMipvXLfexlFMNBuOh50jZTClW3AgBpZ3zCiubnLbxKTOa9g9AeinGzkKCbx+ry2mqPSQPqjqWvLhaVSesz2hFy1Kt48x9nrPomPniNbJxdcReTYKGhwAhtCLNmGiAc2OU5ZUvg8xXOpL6tuEqQ/6jui13QiI3AmszGOKCDGkAVOOB6oBcfNWJAcxJopikC4TGQoaetU+bh1kIAaYhXMvUb4yBWKoUFTWGVACyrPTlMNTx0wb8nnzlLc717LzDsQFvcB1IxYpwq6WsjSDM7B9xWG3vGKtOH/N0rvXTC439rvPNruiiv2wzuOn3lcdudPlCSa1rv5a/K+mlN3HIZvd1Evj7mzkivpxk7Eow36SrOiKzv7Whr8ijS5VpbGJwn+FwOa5qh+h2LCwdyniZQCqOsAx5clZgJJArxJbwHuH+xyHkTBizdox/rGBXDIGoF1ShmH1uWXqKzK1tP/y4wMyt7lA3ADvePfc0b5e8FWFBw77+wPtQ== dhanrajchinta18@gmail.com
+root@LAPTOP-SEOPFS2E:~/.ssh#

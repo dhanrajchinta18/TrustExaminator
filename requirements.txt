@@ -15,11 +15,10 @@ chardet==3.0.4
 charset-normalizer==3.4.1
 ckzg==2.0.1
 CouchDB==1.2
-cryptography==2.8
+cryptography==3.4.8
 cytoolz==1.0.1
 Django==4.2.19
 django-ipfs-storage==0.0.4
-eth-abi==5.2.0
 eth-account==0.13.5
 eth-hash==0.7.1
 eth-keyfile==0.8.1
@@ -27,7 +26,8 @@ eth-keys==0.6.1
 eth-rlp==2.2.0
 eth-typing==5.2.0
 eth-utils==5.2.0
-fabric-sdk-py==0.9.0
+eth_abi==5.2.0
+fabric-sdk-py @ git+https://github.com/hyperledger/fabric-sdk-py.git@161eff3dff1cac299dfc0c4c20ca2a9f63dc606a
 frozenlist==1.5.0
 grpcio==1.70.0
 hexbytes==1.3.0
@@ -42,14 +42,16 @@ netaddr==0.7.19
 parsimonious==0.10.0
 propcache==0.2.0
 protobuf==3.20.3
-psycopg2==2.8.4
+psycopg2-binary==2.9.10
 pycparser==2.19
 pycryptodome==3.21.0
 pycryptodomex==3.21.0
 pydantic==2.10.6
-pydantic-core==2.27.2
+pydantic_core==2.27.2
+pysha3==1.0b1
 pytz==2019.3
 pyunormalize==16.0.0
+pywin32==309
 regex==2024.11.6
 requests==2.32.3
 rlp==4.1.0
@@ -59,7 +61,8 @@ six==1.12.0
 sqlparse==0.5.3
 toolz==1.0.0
 types-requests==2.32.0.20241016
-typing-extensions==4.12.2
+typing_extensions==4.12.2
+tzdata==2025.1
 urllib3==2.2.3
 varint==1.0.2
 web3==7.8.0

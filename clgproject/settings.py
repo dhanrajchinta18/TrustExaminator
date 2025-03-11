@@ -13,8 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 import ipfshttpclient
 
-import ipfs_storage
-ipfs_storage.ipfsapi = ipfshttpclient
+# import ipfs_storage
+# ipfs_storage.ipfsapi = ipfshttpclient
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -90,11 +90,11 @@ WSGI_APPLICATION = 'clgproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ems',
-        'USER': 'admin_ems',
-        'PASSWORD': 'iamadmin@123',
+        'NAME': 'trustems',
+        'USER': 'postgres',
+        'PASSWORD': 'postgre',
         'HOST': 'localhost',
-        'PORT': '',
+        'PORT': '5433',
     }
 }
 
