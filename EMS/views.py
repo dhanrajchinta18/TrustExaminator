@@ -41,8 +41,9 @@ def teacher_dashboard(request):
 			paper = request.FILES.get('paper',None)
 			key = encrypt_file(paper)
 			api = ipfshttpclient.connect()
-			new_file = api.add('static/encrypted_files/'+str(paper)+'.encrypted')
+			new_file = api.add('C:/udownloads/New Project Files/TrustExaminator/static/encrypted_files/'+str(paper)+'.encrypted')
 			hash_id = new_file['Hash']
+			res_papers = api.files.cp(f"/ipfs/{hash_id}", "/papers/"+str(paper)+'.encrypted')
 			arr = a_encryption(hash_id,key,request.user.teacher_id)
 			file_ = open(os.path.join(settings.ENCRYPTION_ROOT,request.user.teacher_id+'_private_key.pem'),'rb')
 			p_file = File(file_)
@@ -95,10 +96,19 @@ def get_teachers(request):
 	branch = request.POST.get('branch',None)
 	subject = request.POST.get('subject',None)
 	queryset1 = Request.objects.values('tusername').distinct()
-	s_code = SubjectCode.objects.filter(subject=subject).values()
-	queryset2 = Request.objects.filter(s_code=s_code[0]['s_code'],status='Uploaded').values('id')
+	#ModS
+	s_code_qs = SubjectCode.objects.filter(subject=subject).values()
+	if not s_code_qs:
+		# Handle the case where no subject code exists. You might want to return an error or default value.
+		return JsonResponse({'error': 'Subject code not found for the given subject'}, status=400)
+
+	s_code = s_code_qs[0]['s_code']
+	queryset2 = Request.objects.filter(s_code=s_code, status='Uploaded').values('id')
+	#ModE
+	# s_code = SubjectCode.objects.filter(subject=subject).values()
+	# queryset2 = Request.objects.filter(s_code=s_code[0]['s_code'],status='Uploaded').values('id')
 	queryset = CustomUser.objects.filter(course=course,semester=semester,branch=branch,subject=subject).exclude(username__in=queryset1).values()
-	data = { 'queryset':list(queryset),'s_code':s_code[0]['s_code'],'queryset2':list(queryset2) }
+	data = { 'queryset':list(queryset),'s_code':s_code,'queryset2':list(queryset2) }
 	return JsonResponse(data)
 
 def add_teacher(request):
