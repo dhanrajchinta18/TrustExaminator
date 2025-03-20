@@ -2,7 +2,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
 from cryptography.hazmat.primitives import serialization, hashes
 import os
-from django.conf import settings 
+from django.conf import settings
 
 def a_encryption(hash_id,key,t_id):
 
@@ -22,7 +22,7 @@ def a_encryption(hash_id,key,t_id):
             encryption_algorithm=serialization.NoEncryption()
         )
 
-    prk_file = os.path.join(settings.ENCRYPTION_ROOT,t_id+'_private_key.pem') 
+    prk_file = os.path.join(settings.ENCRYPTION_ROOT,t_id+'_private_key.pem')
 
     with open(prk_file, 'wb') as f:
         f.write(pem)
@@ -64,12 +64,12 @@ def a_encryption(hash_id,key,t_id):
     return new_arr
 
 def a_decryption(arr):
-    with open('media/'+arr[1], "rb") as key_file:
+    with open('media/'+arr[1].name, "rb") as key_file:
         private_key = serialization.load_pem_private_key(
                 key_file.read(),
                 password=None,
                 backend=default_backend()
-            ) 
+            )
 
     key = private_key.decrypt(
             bytes(arr[0][1]),

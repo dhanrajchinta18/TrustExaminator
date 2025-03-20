@@ -16,19 +16,32 @@
 <h4>Received Question Papers</h4>
 <hr>
 
-{% for teacher in queryset %}
-<div class="card bg-light text-dark flip" id="{{prequest.id}}">
-	<div class="card-body">
-	  	<div class="details" id="details">
-	  		Subject Code: <span style="color: #49688e;">{{teacher.s_code}}</span><br>
-	  		Course: <span style="color: #49688e;">{{teacher.course}}</span><br>
-	  		Semester: <span style="color: #49688e;">{{teacher.semester}}</span><br>
-	  		Branch: <span style="color: #49688e;">{{teacher.branch}}</span><br>
-	  		Subject: <span style="color: #49688e;">{{teacher.subject}}</span><br>
-	  		Question Paper: <span><a href="{{teacher.paper.url}}" style="color: #49688e;" target="_blank">Download Paper</a></span><br>
-  		</div>
-	</div>
-</div><br>
+{% for item in final_papers_data %}
+    {% with teacher=item.paper %} <!-- Access the paper through the item -->
+        <div class="card bg-light text-dark flip" id="{{teacher.id}}">
+            <div class="card-body">
+                <div class="details" id="details">
+                    Subject Code: <span style="color: #49688e;">{{teacher.s_code}}</span><br>
+                    Course: <span style="color: #49688e;">{{teacher.course}}</span><br>
+                    Semester: <span style="color: #49688e;">{{teacher.semester}}</span><br>
+                    Branch: <span style="color: #49688e;">{{teacher.branch}}</span><br>
+                    Subject: <span style="color: #49688e;">{{teacher.subject}}</span><br>
+                    Question Paper:
+                    {% if item.downloadable %}
+                      <form method="POST">
+                         {% csrf_token %}
+                         <input type="hidden" name="paper_id" value="{{ teacher.id }}">
+                         <button type="submit" style="background:none; border:none; padding:0; color: #49688e; cursor: pointer;">Download Paper</button>
+                      </form>
+                    {% else %}
+                        <span style="color: red;">Download available 20 minutes before exam.</span><br>
+                        <span style="color: red;">{{ item.exam_time }}</span><br>
+                        <span style="color: red;">{{ item.timediff }}</span><br>
+                    {% endif %}
+                </div>
+            </div>
+        </div><br>
+    {% endwith %}
 {% endfor %}
 
 {% endblock %}

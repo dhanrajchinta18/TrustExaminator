@@ -18,6 +18,10 @@ import ipfshttpclient
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Blockchain settings
+BLOCKCHAIN_CONTRACT_ADDRESS = "0x4931F347CBA29d932EB03375d6A1190cB0d08e83"  # Replace with your contract address
+BLOCKCHAIN_ABI_PATH = os.path.join(BASE_DIR, "TrustExaminerBlockchain", "build", "contracts", "PaperStorage.json")
+BLOCKCHAIN_GANACHE_URL = "http://127.0.0.1:7545"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -34,7 +38,7 @@ IPFS_STORAGE_GATEWAY_URL = 'http://localhost:8080/ipfs/'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*','localhost','127.0.0.1']
 
 
 # Application definition
@@ -129,8 +133,8 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
-
+USE_TZ = True  # Very important!
+ # e.g., 'America/Los_Angeles', 'Europe/London'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

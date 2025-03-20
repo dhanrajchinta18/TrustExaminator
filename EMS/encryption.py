@@ -3,34 +3,33 @@ from django.conf import settings
 from django.core.files import File
 import os
 
+
 def encrypt_file(paper):
+    key = Fernet.generate_key()
+    input_file = paper
+    output_file = os.path.join(settings.ENCRYPTION_ROOT, str(paper) + '.encrypted')
 
-	key = Fernet.generate_key()
-	input_file = paper
-	output_file = os.path.join(settings.ENCRYPTION_ROOT,str(paper)+'.encrypted')
+    data = input_file.read()
 
-	data = input_file.read()
+    fernet = Fernet(key)
+    encrypted = fernet.encrypt(data)
 
-	fernet = Fernet(key)
-	encrypted = fernet.encrypt(data)
+    with open(output_file, 'wb') as f:
+        f.write(encrypted)
 
-	with open(output_file, 'wb') as f:
-	    f.write(encrypted) 
-
-	return key
+    return key
 
 
-def decrypt_file(paper,key,s_code):
-	
-	fernet = Fernet(key)
-	paper = paper.text.encode('utf-8')
+def decrypt_file(paper, key, s_code):
+    fernet = Fernet(key)
+    paper = paper.text.encode('utf-8')
 
-	decrypted = fernet.decrypt(paper)
-	
-	with open('media/'+s_code+'.pdf','wb') as f:
-		f.write(decrypted)
+    decrypted = fernet.decrypt(paper)
 
-	file_ = open('media/'+s_code+'.pdf','rb')
-	f_file = File(file_)
+    with open('media/' + s_code + '.pdf', 'wb') as f:
+        f.write(decrypted)
 
-	return f_file
+    file_ = open('media/' + s_code + '.pdf', 'rb')
+    f_file = File(file_)
+
+    return f_file
