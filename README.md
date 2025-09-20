@@ -57,7 +57,7 @@ TrustExaminator is a blockchain-based document verification and management syste
 This project is for educational purposes.
 
 ## Authors
-- [Your Name]
+- Dhanraj Chinta
 
 ---
-Feel free to contribute or raise issues for improvements!
+Feel free to contact me for any further information required!
