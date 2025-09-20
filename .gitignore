@@ -6,3 +6,6 @@ env/
 venv/
 .idea/
 *.log
+test.txt
+public_key.pem
+impgithubkeys.txt
