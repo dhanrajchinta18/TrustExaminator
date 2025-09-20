@@ -17,6 +17,7 @@ TrustExaminator is a blockchain-based document verification and management syste
 - `templates/` – HTML templates
 - `manage.py` – Django management script
 - `requirements.txt` – Python dependencies
+- `TrusExaminatorBlockchain` - Blockchain contracts and logic.
 
 ## Getting Started
 
@@ -24,6 +25,8 @@ TrustExaminator is a blockchain-based document verification and management syste
 - Python 3.8+
 - pip
 - Django
+- Ganache
+- IPFS
 
 ### Installation
 1. Clone the repository:
