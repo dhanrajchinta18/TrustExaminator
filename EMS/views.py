@@ -1,7 +1,7 @@
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test # Import user_passes_test
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
@@ -9,12 +9,22 @@ from django.core.files import File
 from django.conf import settings
 import os, ipfshttpclient, requests
 from django.utils import timezone  # Import timezone
+from web3 import Web3  # Import Web3
 
 from .models import Request, FinalPapers, CustomUser, SubjectCode
 from .encryption import encrypt_file, decrypt_file
 from .a_encryption import a_encryption, a_decryption
 from .blockchain import record_paper_upload, record_paper_download_event
 
+# Load contract ABI (assuming it's loaded globally as contract_abi in blockchain.py or here)
+import json
+with open(settings.BLOCKCHAIN_ABI_PATH) as f:
+    contract_json = json.load(f)
+    contract_abi = contract_json["abi"]
+
+
+def custom_404(request, exception):  # 'exception' argument is required by Django
+    return render(request, '404.html', {'is_404_page': True}, status=404)
 
 def user_login(request):
     if request.user.role == 'teacher':
@@ -136,20 +146,29 @@ def coe_dashboard(request):
             teacher_info = CustomUser.objects.filter(username=req.tusername).values("course", "semester", "branch", "subject").first()
             if not teacher_info:
                 raise Exception("Teacher details not found.")
+
+            # Construct filename using s_code - Robust approach
+            constructed_filename = f"{req.s_code}.pdf"
+            if not constructed_filename:  # Fallback in case filename construction fails
+                constructed_filename = "unknown_filename.pdf" # Default filename
+                messages.warning(request, "Filename construction failed. Using default filename.") # Optional warning
+
             final_record = FinalPapers.objects.create(
                 s_code=req.s_code,
                 course=teacher_info["course"],
                 semester=teacher_info["semester"],
                 branch=teacher_info["branch"],
-                subject=teacher_info["subject"]
+                subject=teacher_info["subject"],
+                filename=constructed_filename
             )
             final_record.paper.save(f"{req.s_code}.pdf", final_content, save=True)
 
             # Record blockchain transaction.
-            receipt = record_paper_upload(hash_id, req.tusername)
+            receipt, contract_paper_id = record_paper_upload(hash_id, constructed_filename, req.tusername) # MODIFIED: Get paperCount
             tx_hash = receipt.transactionHash.hex()
             final_record.blockchain_status = "Recorded"
             final_record.tx_hash = tx_hash
+            final_record.contract_paper_id = contract_paper_id # MODIFIED: Store contract_paper_id
             final_record.save()
 
             # Only after successful processing, update the request status.
@@ -188,54 +207,235 @@ def st_dashboard(request):  # Django's HttpRequest object
 
     now = timezone.now()  # Get the current time (time-zone aware)
 
+    print("DEBUG (st_dashboard): Starting to process final_papers_data loop") # Debug 1
+
     for paper in queryset:
         try:
             # Fetch the associated request for this paper
-            exam_request = Request.objects.get(s_code=paper.s_code, status="Finalized")
-            exam_time = exam_request.exam_time
-
-            time_difference = exam_time - now
-
-            # Allow download only when the exam is 20 minutes away or less
-            downloadable = time_difference <= datetime.timedelta(minutes=20)
+            exam_request = Request.objects.filter(s_code=paper.s_code, status="Finalized").first()
+            if exam_request:
+                exam_time = exam_request.exam_time
+                time_difference = exam_time - now
+                downloadable = time_difference <= datetime.timedelta(minutes=20)
+            else:
+                downloadable = False
 
         except Request.DoesNotExist:
-            downloadable = False  # No associated request found
+            downloadable = False
 
         final_papers_data.append({
-            'exam_time': exam_time,
+            'exam_time': exam_time if exam_request else None,
             'paper': paper,
             'downloadable': downloadable,
-            'timediff': time_difference
+            'timediff': time_difference if exam_request else None,
+            'already_downloaded': paper.downloaded,  # Pass downloaded status to template
+            'django_paper_id': paper.id, # Debug: Django FinalPapers ID
+            'contract_paper_id': paper.contract_paper_id # Debug: Contract Paper ID
         })
 
+    print("DEBUG (st_dashboard): final_papers_data prepared:") # Debug 2
+    for item in final_papers_data: # Debug 3: Print details of each item in final_papers_data
+        print(f"DEBUG (st_dashboard):   Django Paper ID: {item['django_paper_id']}, Contract Paper ID: {item['contract_paper_id']}, Downloadable: {item['downloadable']}, Already Downloaded: {item['already_downloaded']}")
+
+
     if request.method == 'POST':  # Handle download requests
-        paper_id = request.POST.get('paper_id')
-        if paper_id:
-            paper = get_object_or_404(FinalPapers, id=paper_id)  # Get Paper Object
+        paper_id_str = request.POST.get('paper_id')
+        print(f"DEBUG (st_dashboard): POST request received. paper_id_str from form: {paper_id_str}") # Debug 4
+        if paper_id_str:
             try:
-                # Record download event on blockchain
-                download_tx_hash = record_paper_download_event(
-                    paper.id,  # Passing Paper's ID
-                    request.user.username  # Superintendent's username
-                )
-                # Update the model
-                paper.download_tx_hash = download_tx_hash
-                paper.save()
+                paper_id = int(paper_id_str)
+                print(f"DEBUG (st_dashboard): paper_id (int) to lookup (contract_paper_id): {paper_id}") # Debug 5 - Clarified debug message
+                paper_instance = get_object_or_404(FinalPapers, contract_paper_id=paper_id) # MODIFIED: Lookup by contract_paper_id
+                print(f"DEBUG (st_dashboard): FinalPapers instance found for contract_paper_id: {paper_id}, Django Paper ID: {paper_instance.id}, Contract Paper ID: {paper_instance.contract_paper_id}") # Debug 6 - Clarified debug message
 
-            except Exception as e:
-                messages.error(request, f"Error recording download on blockchain: {e}")
+                if paper_instance.downloaded:  # Check if already downloaded
+                    messages.error(request, "This paper has already been downloaded.") # Optional message
+                    return redirect('st_dashboard') # Redirect to dashboard or handle as needed
 
-            # Serve the file for download
-            file_path = paper.paper.path
-            with open(file_path, 'rb') as f:
-                response = HttpResponse(f.read(), content_type="application/pdf")
-                response['Content-Disposition'] = f'attachment; filename="{paper.s_code}.pdf"'
-                return response
+                try:
+                    # Record download event on blockchain
+                    download_tx_hash = record_paper_download_event(
+                        paper_id, # Pass contract_paper_id (which is now 'paper_id' variable)
+                        paper_instance.filename,
+                        request.user.username
+                    )
+                    # Update the model
+                    paper_instance.download_tx_hash = download_tx_hash
+                    paper_instance.downloaded = True  # Set downloaded to True after successful download
+                    paper_instance.save()
+
+                except Exception as e:
+                    messages.error(request, f"Error recording download on blockchain: {e}")
+
+                # Serve the file for download
+                file_path = paper_instance.paper.path
+                with open(file_path, 'rb') as f:
+                    response = HttpResponse(f.read(), content_type="application/pdf")
+                    response['Content-Disposition'] = f'attachment; filename="{paper_instance.s_code}.pdf"'
+                    return response
+
+            except ValueError:
+                messages.error(request, "Invalid paper ID format.")
+        else:
+            print("DEBUG (st_dashboard): paper_id_str is empty in POST request") # Debug 7
 
     return render(request, 'superintendent.html', {'final_papers_data': final_papers_data})
 
 
+# New View for Transaction History (COE only)
+from web3._utils.events import get_event_data
+
+@login_required(login_url='login')
+@user_passes_test(lambda u: u.role == 'coe')
+def transaction_history_coe(request):
+    if request.user.role != 'coe':
+        messages.error(request, "You do not have permission to access this page.", extra_tags='access_denied')
+        return render(request, 'transaction_history_coe.html', {'transactions': []}) # Or redirect to another page if preferred
+
+    w3 = Web3(Web3.HTTPProvider(settings.BLOCKCHAIN_GANACHE_URL))
+
+    # Build a dict of event ABIs from contract_abi (assumed to be imported/defined)
+    event_abis = {item['name']: item for item in contract_abi if item.get('type') == 'event'}
+    if not all(name in event_abis for name in ('PaperUploaded', 'PaperDownloaded')):
+        messages.error(request, "Event ABIs not found in contract ABI.")
+        return render(request, 'transaction_history_coe.html', {'transactions': []})
+
+    # Pre-calculate event signature topics
+    topics = {
+        'Upload': "0x" + w3.keccak(text="PaperUploaded(uint256,string,string,string,uint256)").hex(),
+        'Download': "0x" + w3.keccak(text="PaperDownloaded(uint256,uint256,string,string,uint256)").hex()
+    }
+
+    # Fetch logs for PaperUploaded
+    uploaded_filter = w3.eth.filter({
+        "address": settings.BLOCKCHAIN_CONTRACT_ADDRESS,
+        "fromBlock": 0,
+        "topics": [topics['Upload']]
+    })
+    uploaded_events = w3.eth.get_filter_logs(uploaded_filter.filter_id)
+
+    # Fetch logs for PaperDownloaded
+    downloaded_events = w3.eth.get_logs({
+        'address': settings.BLOCKCHAIN_CONTRACT_ADDRESS,
+        'fromBlock': 0,
+        'toBlock': 'latest',
+        'topics': [topics['Download']]
+    })
+
+    # Helper function to decode an event log
+    def decode_event(event, event_type):
+        abi = event_abis['PaperUploaded'] if event_type == 'Upload' else event_abis['PaperDownloaded']
+        decoded = get_event_data(w3.codec, abi, event)
+        # Try to retrieve the block timestamp; fallback to the decoded event's timestamp
+        block = w3.eth.get_block(event['blockNumber'])
+        ts = block.get('timestamp') or decoded['args'].get('timestamp')
+        # Convert Unix timestamp (seconds) to a Python datetime object
+        timestamp = datetime.datetime.fromtimestamp(ts) if ts else None
+        print(timestamp)
+        args = decoded['args']
+        if event_type == 'Upload':
+            initiator = args.get('uploader', '')
+            paper_id = args.get('id', '')
+        else:
+            initiator = args.get('downloader', '')
+            paper_id = args.get('paperId', '')
+        return {
+            'tx_hash': event['transactionHash'].hex(),
+            'block_number': event['blockNumber'],
+            'timestamp': timestamp,
+            'event_type': event_type,
+            'initiator': initiator,
+            'filename': args.get('filename', ''),
+            'paper_id': paper_id
+        }
+
+    transactions = ([decode_event(ev, 'Upload') for ev in uploaded_events] +
+                    [decode_event(ev, 'Download') for ev in downloaded_events])
+    transactions.sort(key=lambda x: x['timestamp'] or 0, reverse=True)
+
+    return render(request, 'transaction_history_coe.html', {'transactions': transactions})
+
+
+
+#
+# @login_required(login_url='login')
+# @user_passes_test(lambda u: u.role == 'coe')  # Restrict to COE role
+# def transaction_history_coe(request):
+#     web3_instance = Web3(Web3.HTTPProvider(settings.BLOCKCHAIN_GANACHE_URL))
+#     contract_instance = web3_instance.eth.contract(
+#         address=settings.BLOCKCHAIN_CONTRACT_ADDRESS,
+#         abi=contract_abi
+#     )
+#
+#     # Extract event ABIs from the contract ABI for decoding logs
+#     paper_uploaded_event_abi = None
+#     paper_downloaded_event_abi = None
+#     for item in contract_abi:
+#         if item.get('type') == 'event' and item.get('name') == 'PaperUploaded':
+#             paper_uploaded_event_abi = item
+#         elif item.get('type') == 'event' and item.get('name') == 'PaperDownloaded':
+#             paper_downloaded_event_abi = item
+#
+#     if not paper_uploaded_event_abi or not paper_downloaded_event_abi:
+#         messages.error(request, "Event ABIs not found in contract ABI.")
+#         return render(request, 'transaction_history_coe.html', {'transactions': []})
+#
+#     # Get event signature hashes for filtering logs.
+#     # (Make sure the string matches the Solidity event exactly.)
+#     paper_uploaded_event_signature_hash = "0x" + web3_instance.keccak(text="PaperUploaded(uint256,string,string,string,uint256)").hex()
+#     paper_downloaded_event_signature_hash = "0x" + web3_instance.keccak(text="PaperDownloaded(uint256,uint256,string,string,uint256)").hex()
+#
+#     # Fetch event logs for PaperUploaded using eth.filter
+#     uploaded_event_filter = web3_instance.eth.filter({
+#         "address": settings.BLOCKCHAIN_CONTRACT_ADDRESS,
+#         "fromBlock": 0,
+#         "topics": [paper_uploaded_event_signature_hash]
+#     })
+#     uploaded_events = web3_instance.eth.get_filter_logs(uploaded_event_filter.filter_id)
+#
+#     # Fetch PaperDownloaded events using get_logs
+#     downloaded_events = web3_instance.eth.get_logs({
+#         'address': settings.BLOCKCHAIN_CONTRACT_ADDRESS,
+#         'fromBlock': 0,
+#         'toBlock': 'latest',
+#         'topics': [paper_downloaded_event_signature_hash]
+#     })
+#
+#     transactions = []
+#
+#     # Decode PaperUploaded events
+#     for event in uploaded_events:
+#         print("DEBUG (transaction_history_coe): Uploaded Event Keys:", event.keys())
+#         decoded_event = get_event_data(web3_instance.codec, paper_uploaded_event_abi, event)
+#         transactions.append({
+#             'tx_hash': event['transactionHash'].hex(),
+#             'block_number': event['blockNumber'],
+#             'timestamp': web3_instance.eth.get_block(event['blockNumber'])['timestamp'],
+#             'event_type': 'Upload',
+#             'initiator': decoded_event['args']['uploader'],
+#             'filename': decoded_event['args']['filename'],
+#             'paper_id': decoded_event['args']['id']
+#         })
+#
+#     # Decode PaperDownloaded events
+#     for event in downloaded_events:
+#         print("DEBUG (transaction_history_coe): Downloaded Event Keys:", event.keys())
+#         decoded_event = get_event_data(web3_instance.codec, paper_downloaded_event_abi, event)
+#         transactions.append({
+#             'tx_hash': event['transactionHash'].hex(),
+#             'block_number': event['blockNumber'],
+#             'timestamp': web3_instance.eth.get_block(event['blockNumber'])['timestamp'],
+#             'event_type': 'Download',
+#             'initiator': decoded_event['args']['downloader'],
+#             'filename': decoded_event['args']['filename'],
+#             'paper_id': decoded_event['args']['paperId']
+#         })
+#
+#     # Sort transactions by timestamp in descending order (newest first)
+#     transactions.sort(key=lambda x: x['timestamp'], reverse=True)
+#
+#     context = {'transactions': transactions}
+#     return render(request, 'transaction_history_coe.html', context)
 
 
 def get_teachers(request):

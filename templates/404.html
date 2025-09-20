@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Page Not Found (404){% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8 block text-center"> <!-- Using 'block' class from base.html -->
+            <h1 style="color: #e44d26; font-size: 3em; margin-bottom: 20px;">Oops! Error 404 - Page Not Found</h1>
+            <p style="font-size: 1.2em; color: #555; margin-bottom: 30px;">
+                We're sorry, but the page you requested could not be found on this server.
+            </p>
+            <p style="font-size: 1.1em;">
+                Please check the URL and try again, or return to the <a href="/" style="color: #007bff;">homepage</a>.
+            </p>
+            <div style="margin-top: 40px;">
+                <img src="C:/udownloads/New_Project_Files/TrustExaminatorv1/static/images/404.svg" alt="Page Not Found" style="max-width: 300px; height: auto;">
+                <!-- You can replace 'images/404-image.svg' with a relevant 404 image if you have one in your static files -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block logout_btn %}
+    {% if user.is_authenticated %}
+        <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>
+    {% endif %}
+{% endblock %}

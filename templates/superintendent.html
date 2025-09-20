@@ -5,43 +5,57 @@
 
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'superintendent_css.css' %}">
+<script>
+$(document).ready(function(){
+  $(".flip").click(function(){
+    $(this).find(".details").slideToggle("fast");
+  });
+});
+</script>
 {% endblock %}
 
-{% block logo %}<a class="navbar-brand" style="color: #49688e;">{{request.user.first_name}} {{request.user.last_name}}</a>{% endblock %}
+{% block logo %}<a class="navbar-brand" style="color: #343a40;">{{request.user.first_name}} {{request.user.last_name}}</a>{% endblock %}
 
-{% block logout_btn %}<a class="nav-link" href="{% url 'user_logout' %}" style="color: #49688e; text-decoration: none;">Logout</a>{% endblock %}
+{% block logout_btn %}<a class="nav-link" href="{% url 'user_logout' %}" style="color: #6c757d; text-decoration: none;">Logout</a>{% endblock %}
 
+{# ... st_dashboard.html ... #}
 {% block content %}
 
-<h4>Received Question Papers</h4>
-<hr>
+<h4 class="superintendent-title">Received Question Papers</h4>
+<hr class="superintendent-hr">
 
+<div class="papers-container">
 {% for item in final_papers_data %}
-    {% with teacher=item.paper %} <!-- Access the paper through the item -->
-        <div class="card bg-light text-dark flip" id="{{teacher.id}}">
+    {% with teacher=item.paper %}
+        <div class="card bg-light text-dark flip superintendent-paper-card" id="{{teacher.id}}">
             <div class="card-body">
-                <div class="details" id="details">
-                    Subject Code: <span style="color: #49688e;">{{teacher.s_code}}</span><br>
-                    Course: <span style="color: #49688e;">{{teacher.course}}</span><br>
-                    Semester: <span style="color: #49688e;">{{teacher.semester}}</span><br>
-                    Branch: <span style="color: #49688e;">{{teacher.branch}}</span><br>
-                    Subject: <span style="color: #49688e;">{{teacher.subject}}</span><br>
+                <h5 class="card-title">Subject: {{teacher.subject}} ({{teacher.s_code}})</h5>
+                <p class="card-text">Click to view paper details and download options.</p>
+                <div class="details" id="details"><br>
+                    Subject Code: <span class="detail-value">{{teacher.s_code}}</span><br>
+                    Course: <span class="detail-value">{{teacher.course}}</span><br>
+                    Semester: <span class="detail-value">{{teacher.semester}}</span><br>
+                    Branch: <span class="detail-value">{{teacher.branch}}</span><br>
+                    Subject: <span class="detail-value">{{teacher.subject}}</span><br>
                     Question Paper:
-                    {% if item.downloadable %}
-                      <form method="POST">
+                    {% if item.downloadable and not item.already_downloaded %}
+                      <form method="POST" class="download-form">
                          {% csrf_token %}
-                         <input type="hidden" name="paper_id" value="{{ teacher.id }}">
-                         <button type="submit" style="background:none; border:none; padding:0; color: #49688e; cursor: pointer;">Download Paper</button>
+                         <input type="hidden" name="paper_id" value="{{ teacher.contract_paper_id }}">
+                         <button type="submit" class="btn btn-primary superintendent-download-btn">Download Paper</button>
                       </form>
+                    {% elif item.already_downloaded %}
+                        <span class="download-status downloaded">Downloaded</span>
                     {% else %}
-                        <span style="color: red;">Download available 20 minutes before exam.</span><br>
-                        <span style="color: red;">{{ item.exam_time }}</span><br>
-                        <span style="color: red;">{{ item.timediff }}</span><br>
+                        <span class="download-status pending">Download available 20 minutes before exam.</span><br>
+                        <span class="exam-time">Exam Time: {{ item.exam_time }}</span><br>
+                        <span class="time-diff">Time Difference: {{ item.timediff }}</span><br>
                     {% endif %}
                 </div>
             </div>
         </div><br>
     {% endwith %}
 {% endfor %}
+</div>
 
 {% endblock %}

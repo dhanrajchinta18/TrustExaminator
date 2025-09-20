@@ -5,77 +5,84 @@
 
 {% block link %}
 <link rel="stylesheet" type="text/css" href="{% static 'teacher_css.css' %}">
-<script> 
+<script>
 $(document).ready(function(){
   $(".flip").click(function(){
-    $("#details").slideDown("slow");
+    $(this).find(".details").slideToggle("fast");
   });
 });
 </script>
 {% endblock %}
 
-{% block logo %}<a class="navbar-brand" style="color: #49688e;">{{request.user.first_name}} {{request.user.last_name}}</a>{% endblock %}
-{% block logout_btn %}<a class="nav-link" href="{% url 'user_logout' %}" style="color: #49688e; text-decoration: none;">Logout</a>{% endblock %}
+{% block logo %}<a class="navbar-brand" style="color: #343a40;">{{request.user.first_name}} {{request.user.last_name}}</a>{% endblock %}
+{% block logout_btn %}<a class="nav-link" href="{% url 'user_logout' %}" style="color: #6c757d; text-decoration: none;">Logout</a>{% endblock %}
 
 {% block content %}
 
 {% if messages %}
   {% for message in messages %}
     {% if 'upload' in message.tags %}
-      <div class="alert alert-success alert-dismissible fade show" style="text-align: center;border-radius: 0;">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>{{message}}
+      <div class="alert alert-success alert-dismissible fade show teacher-alert" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        {{message}}
       </div>
     {% elif 'accept' in message.tags %}
-      <div class="alert alert-success alert-dismissible fade show" style="text-align: center;border-radius: 0;">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>{{message}}
+      <div class="alert alert-success alert-dismissible fade show teacher-alert" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        {{message}}
       </div>
     {% endif %}
   {% endfor %}
 {% endif %}
 
-<ul class="nav nav-tabs fstretch" role="tablist">
-  <li class="nav-item stretch">
-    <a class="nav-link active text" data-toggle="tab" href="#prequest">Pending Requests</a>
+<ul class="nav nav-tabs nav-fill teacher-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#prequest">Pending Requests</a>
   </li>
-  <li class="nav-item stretch">
-    <a class="nav-link text" data-toggle="tab" href="#arequest">Accepted Requests</a>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#arequest">Accepted Requests</a>
   </li>
 </ul>
 
-<div class="tab-content">
+<div class="tab-content teacher-tab-content">
   <!-- Pending Requests -->
   <div id="prequest" class="container tab-pane active"><br>
     {% if p_request %}
       {% for prequest in p_request %}
-      <div class="card bg-light text-dark flip" id="{{ prequest.id }}">
+      <div class="card bg-light text-dark flip teacher-request-card" id="{{ prequest.id }}">
         <div class="card-body">
-          You have received a request to set a paper. Click to get more details.
+          <h5 class="card-title">New Paper Request</h5>
+          <p class="card-text">You have received a request to set a paper. Click to get more details.</p>
           <div class="details" id="details"><br>
-            Subject Code: <span style="color: #49688e;">{{ prequest.s_code }}</span><br>
-            Course: <span style="color: #49688e;">{{ request.user.course }}</span><br>
-            Semester: <span style="color: #49688e;">{{ request.user.semester }}</span><br>
-            Branch: <span style="color: #49688e;">{{ request.user.branch }}</span><br>
-            Subject: <span style="color: #49688e;">{{ request.user.subject }}</span><br>
-            Syllabus: <a href="{{ prequest.syllabus.url }}" target="_blank" style="color: #49688e;">Syllabus</a><br>
-            Question Pattern: <a href="{{ prequest.q_pattern.url }}" target="_blank" style="color: #49688e;">Question Pattern</a><br>
-            Total Marks: <span style="color: #49688e;">50</span><br>
-            Deadline: <span style="color: #49688e;">{{ prequest.paper_deadline | date:"F j, Y, g:i a" }}</span><br><br>
-            Exam Time: <span style="color: #49688e;">{{ prequest.exam_time | date:"F j, Y, g:i a" }}</span><br><br>
-            <form method="POST">
+            Subject Code: <span class="detail-value">{{ prequest.s_code }}</span><br>
+            Course: <span class="detail-value">{{ request.user.course }}</span><br>
+            Semester: <span class="detail-value">{{ request.user.semester }}</span><br>
+            Branch: <span class="detail-value">{{ request.user.branch }}</span><br>
+            Subject: <span class="detail-value">{{ request.user.subject }}</span><br>
+            Syllabus: <a href="{{ prequest.syllabus.url }}" target="_blank" class="detail-link">Syllabus</a><br>
+            Question Pattern: <a href="{{ prequest.q_pattern.url }}" target="_blank" class="detail-link">Question Pattern</a><br>
+            Total Marks: <span class="detail-value">50</span><br>
+            Deadline: <span class="detail-value">{{ prequest.paper_deadline | date:"F j, Y, g:i a" }}</span><br>
+            Exam Time1: <span class="detail-value">{{ prequest.exam_time | date:"F j, Y, g:i a" }}</span><br><br>
+            <form method="POST" class="teacher-action-form">
               {% csrf_token %}
               <!-- Using "b_id" for the accept action -->
               <input type="hidden" name="b_id" value="{{ prequest.id }}">
-              <input type="submit" class="btn btn-primary accept" name="accept" value="Accept">
-              <button type="button" class="btn btn-danger reject">Reject</button>
+              <input type="submit" class="btn btn-primary teacher-accept-btn" name="accept" value="Accept">
+              <button type="button" class="btn btn-secondary teacher-reject-btn reject">Reject</button>
             </form>
           </div>
         </div>
       </div><br>
       {% endfor %}
     {% else %}
-      <div class="card bg-light text-dark" id="flip">
+      <div class="card bg-light text-dark teacher-no-request-card">
         <div class="card-body" style="text-align: center;">
-          No requests received.
+          No pending requests received.
         </div>
       </div><br>
     {% endif %}
@@ -85,23 +92,24 @@ $(document).ready(function(){
   <div id="arequest" class="container tab-pane fade"><br>
     {% if a_request %}
       {% for arequest in a_request %}
-      <div class="card bg-light text-dark" id="{{ arequest.id }}">
+      <div class="card bg-light text-dark teacher-accepted-card" id="{{ arequest.id }}">
         <div class="card-body">
-          You have accepted the request to set this paper. Click to get more details.
+          <h5 class="card-title">Accepted Paper Request</h5>
+          <p class="card-text">You have accepted the request to set this paper. Click to get more details.</p>
           <div><br>
-            Subject Code: <span style="color: #49688e;">{{ arequest.s_code }}</span><br>
-            Course: <span style="color: #49688e;">{{ request.user.course }}</span><br>
-            Semester: <span style="color: #49688e;">{{ request.user.semester }}</span><br>
-            Branch: <span style="color: #49688e;">{{ request.user.branch }}</span><br>
-            Subject: <span style="color: #49688e;">{{ request.user.subject }}</span><br>
-            Syllabus: <a href="{{ arequest.syllabus.url }}" target="_blank" style="color: #49688e;">Syllabus</a><br>
-            Question Pattern: <a href="{{ arequest.q_pattern.url }}" target="_blank" style="color: #49688e;">Question Pattern</a><br>
-            Total Marks: <span style="color: #49688e;">50</span><br>
-            Deadline: <span style="color: #49688e;">{{ arequest.paper_deadline | date:"F j, Y, g:i a" }}</span><br><br>
-            Exam Time: <span style="color: #49688e;">{{ arequest.exam_time | date:"F j, Y, g:i a" }}</span><br><br>
+            Subject Code: <span class="detail-value">{{ arequest.s_code }}</span><br>
+            Course: <span class="detail-value">{{ request.user.course }}</span><br>
+            Semester: <span class="detail-value">{{ request.user.semester }}</span><br>
+            Branch: <span class="detail-value">{{ request.user.branch }}</span><br>
+            Subject: <span class="detail-value">{{ request.user.subject }}</span><br>
+            Syllabus: <a href="{{ arequest.syllabus.url }}" target="_blank" class="detail-link">Syllabus</a><br>
+            Question Pattern: <a href="{{ arequest.q_pattern.url }}" target="_blank" class="detail-link">Question Pattern</a><br>
+            Total Marks: <span class="detail-value">50</span><br>
+            Deadline: <span class="detail-value">{{ arequest.paper_deadline | date:"F j, Y, g:i a" }}</span><br>
+            Exam Time: <span class="detail-value">{{ arequest.exam_time | date:"F j, Y, g:i a" }}</span><br><br>
             {% if not arequest.private_key %}
               <br>
-              <form method="POST" enctype="multipart/form-data">
+              <form method="POST" enctype="multipart/form-data" class="teacher-upload-form">
                 {% csrf_token %}
                 <!-- Hidden field for request ID -->
                 <input type="hidden" name="req_id" value="{{ arequest.id }}">
@@ -109,28 +117,28 @@ $(document).ready(function(){
                   <input type="file" class="custom-file-input" id="customFile{{ arequest.id }}" name="paper" accept="application/pdf" required>
                   <label class="custom-file-label" for="customFile{{ arequest.id }}">Choose file</label>
                 </div>
-                <div class="modal fade" id="myModal{{ arequest.id }}">
+                <div class="modal fade teacher-upload-modal" id="myModal{{ arequest.id }}">
                   <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
-                      <div class="modal-body">
+                      <div class="modal-body teacher-modal-body">
                         Paper once uploaded cannot be changed. Are you sure you want to continue with the upload?
-                        <div class="buttons">
-                          <button type="submit" class="btn btn-success btns">Continue</button>
-                          <button class="btn btn-danger btns" data-dismiss="modal">Go back</button>
+                        <div class="buttons teacher-modal-buttons">
+                          <button type="submit" class="btn btn-success teacher-modal-continue-btn btns">Continue</button>
+                          <button class="btn btn-secondary teacher-modal-back-btn btns" data-dismiss="modal">Go back</button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </form>
-              <button class="btn btn-primary" data-toggle="modal" data-target="#myModal{{ arequest.id }}" id="u_btn{{ arequest.id }}" disabled>Upload</button>
+              <button class="btn btn-primary teacher-upload-button" data-toggle="modal" data-target="#myModal{{ arequest.id }}" id="u_btn{{ arequest.id }}" disabled>Upload</button>
             {% endif %}
           </div>
         </div>
       </div><br>
       {% endfor %}
     {% else %}
-      <div class="card bg-light text-dark no-request">
+      <div class="card bg-light text-dark teacher-no-accepted-card">
         <div class="card-body" style="text-align: center;">
           No requests Accepted.
         </div>

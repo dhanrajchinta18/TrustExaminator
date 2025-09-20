@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Blockchain Transaction History{% endblock %}
+
+{% block link %}
+<link rel="stylesheet" type="text/css" href="{% static 'coe_css.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'transaction_history_css.css' %}">
+{% endblock %}
+
+{% block logo %}
+<a class="navbar-brand" style="color: #343a40;">{{ request.user.first_name }} {{ request.user.last_name }}</a>
+{% endblock %}
+
+{% block logout_btn %}
+<a class="nav-link" href="{% url 'user_logout' %}" style="color: #6c757d; text-decoration: none;">Logout</a>
+{% endblock %}
+
+{% block content %}
+<div class="transaction-history-container">
+    <h2 class="transaction-history-title">Blockchain Transaction History</h2>
+    {% if messages %}
+    {% for message in messages %}
+    {% if message.tags == 'access_denied' %}
+    <div class="alert alert-danger" role="alert">
+        {{ message }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    
+    <div class="table-responsive transaction-history-table-responsive">
+        <table class="table table-bordered table-hover transaction-history-table">
+            <thead>
+                <tr>
+                    <th>Transaction Hash</th>
+                    <th>Block Number</th>
+                    <th>Timestamp</th>
+                    <th>Event Type</th>
+                    <th>Initiator</th>
+                    <th>Filename</th>
+                    <th>Paper ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tx in transactions %}
+                <tr>
+                    <td><span class="hash-value">{{ tx.tx_hash }}</span></td> <!-- Added class for hash -->
+                    <td>{{ tx.block_number }}</td>
+                    <td>{{ tx.timestamp|date:"Y-m-d H:i:s" }}</td>
+                    <td>{{ tx.event_type }}</td>
+                    <td>{{ tx.initiator }}</td>
+                    <td>{{ tx.filename }}</td>
+                    <td>{{ tx.paper_id }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center no-transactions">No transactions recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

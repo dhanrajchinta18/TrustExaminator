@@ -1,0 +1,97 @@
+.transaction-history-container {
+    padding: 40px; /* Increased padding */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.transaction-history-title {
+    color: #495057;
+    text-align: center;
+    margin-bottom: 40px; /* Increased margin */
+    font-size: 2.2rem; /* Larger title */
+    font-weight: 700;
+}
+
+.transaction-history-table-responsive {
+    width: 95vw; /* Wider table */
+    margin: 0 auto;
+    max-width: 1400px; /* Increased max width */
+}
+
+.transaction-history-table {
+    border-collapse: collapse;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06); /* Slightly stronger shadow */
+    border-radius: 10px; /* More rounded corners */
+    overflow: hidden;
+    margin-bottom: 30px;
+    background-color: white;
+    animation: fadeInTable 0.5s ease-out forwards; /* Fade in animation */
+    opacity: 0;
+}
+@keyframes fadeInTable {
+    to { opacity: 1; }
+}
+
+.transaction-history-table thead tr th {
+    background-color: #f8f9fa;
+    color: #495057 !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    text-align: left;
+    padding: 16px 20px; /* Increased padding */
+    border-bottom: 2px solid #e9ecef !important;
+}
+
+.transaction-history-table tbody tr td {
+    padding: 16px 20px; /* Increased padding */
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.95rem; /* Slightly larger font */
+    vertical-align: middle; /* Vertically center content */
+}
+
+.transaction-history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.no-transactions {
+    text-align: center;
+    padding: 30px; /* Increased padding */
+    color: #6c757d;
+    font-style: italic;
+    font-size: 1.1rem; /* Slightly larger font */
+}
+
+.hash-value { /* Style for transaction hash */
+    font-family: monospace; /* Monospace font for hashes */
+    font-size: 0.9rem; /* Slightly smaller font for hashes */
+    color: #007bff; /* Primary color for hashes */
+    word-break: break-all; /* Break long hashes */
+}
+
+
+@media (max-width: 768px) {
+    .transaction-history-container {
+        padding: 30px;
+    }
+    .transaction-history-title {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    .transaction-history-table-responsive {
+        width: 98vw;
+    }
+    .transaction-history-table thead tr th,
+    .transaction-history-table tbody tr td {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    .no-transactions {
+        padding: 20px;
+        font-size: 1rem;
+    }
+    .hash-value {
+        font-size: 0.8rem;
+    }
+}

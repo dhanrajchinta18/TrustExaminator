@@ -1,41 +1,183 @@
-.fstretch{
-	width: 100vw;
+.teacher-alert {
+    text-align: center;
+	border-radius: 8px !important;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
-.stretch{
-	width: 50vw;
-	text-align: center;
-	margin: 0 auto;
+.alert-success {
+    background-color: #e7f8ec;
+    border-color: #d3f4df;
+    color: #155724;
 }
-.text{
-	font-size: 20px !important;
-	color: rgba(0,0,0,0.5) !important;
+.close {
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
 }
-.active{
-	color: #49688e !important;
+.close:hover {
+    opacity: 1;
 }
+
+
+.teacher-tabs {
+	margin-bottom: 25px;
+    border-bottom: 2px solid #e9ecef;
+}
+.teacher-tabs .nav-link {
+    font-size: 1.1rem !important;
+    color: #6c757d !important;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    padding: 12px 20px;
+    transition: color 0.3s ease-in-out, border-bottom-color 0.3s ease-in-out;
+    font-weight: 500;
+    margin-bottom: -2px;
+}
+.teacher-tabs .nav-link:hover {
+    background-color: transparent !important;
+    border-color: transparent transparent #e9ecef;
+    color: #495057 !important;
+    border-bottom-color: #007bff;
+}
+.teacher-tabs .nav-link.active {
+    color: #007bff !important;
+    background-color: #fff;
+    border-color: #e9ecef #e9ecef #fff;
+    font-weight: 600;
+    border-bottom-color: #007bff;
+}
+
+.teacher-tab-content {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+
 .details{
 	display: none;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef;
+    margin-top: 20px;
 }
 .card{
 	cursor: pointer !important;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06); /* Slightly stronger card shadow */
+    transition: box-shadow 0.3s ease-in-out, transform 0.2s ease-in-out; /* Added transform transition */
+    overflow: hidden;
+    background-color: #fff; /* White card background */
 }
-.btn-primary{
-	width: 100px;
-	margin: 0 10px 0 0;
-	background-color: #49688e !important;
-	border: none !important; 
+.card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Stronger shadow on hover */
+    transform: scale(1.02); /* Slight scale up on hover */
 }
-.btn-primary:hover{
-	background-color: #007BFF !important;
+.card-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 0.8rem;
 }
-.btn-danger{
-	width: 100px;
-	margin: 0 10px 0 0;
+.card-text {
+    color: #6c757d;
+    margin-bottom: 1.2rem;
 }
-.buttons{
-	margin: 30px !important;
-	text-align: center !important;
+.card-body {
+    padding: 25px;
 }
-.btns{
-	margin: 0 20px 0 20px;
+.detail-value {
+    color: #007bff; /* Primary color for detail values */
+    font-weight: 600;
+}
+.detail-link {
+    color: #007bff; /* Primary color for detail links */
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+.detail-link:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.teacher-accept-btn, .teacher-reject-btn, .teacher-upload-button, .teacher-modal-continue-btn, .teacher-modal-back-btn {
+	width: auto;
+	margin: 0 8px 0 0;
+	background-color: #007bff !important;
+	border: none !important;
+    border-radius: 6px !important;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.teacher-accept-btn:hover, .teacher-reject-btn:hover, .teacher-upload-button:hover, .teacher-modal-continue-btn:hover, .teacher-modal-back-btn:hover {
+	background-color: #0056b3 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.teacher-accept-btn:focus,.teacher-accept-btn:focus:active, .teacher-reject-btn:focus,.teacher-reject-btn:focus:active,
+.teacher-upload-button:focus,.teacher-upload-button:focus:active, .teacher-modal-continue-btn:focus,.teacher-modal-continue-btn:focus:active,
+.teacher-modal-back-btn:focus, .teacher-modal-back-btn:focus:active {
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5) !important;
+}
+
+.teacher-reject-btn, .teacher-modal-back-btn {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+}
+.teacher-reject-btn:hover, .teacher-modal-back-btn:hover {
+    background-color: #c82333 !important;
+    border-color: #c82333 !important;
+}
+.teacher-reject-btn:focus,.teacher-reject-btn:focus:active, .teacher-modal-back-btn:focus, .teacher-modal-back-btn:focus:active {
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.5) !important;
+}
+
+.teacher-modal-buttons {
+    text-align: center !important;
+    margin-top: 25px;
+}
+
+.teacher-no-request-card, .teacher-no-accepted-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.teacher-upload-modal .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+.teacher-modal-body {
+    padding: 30px;
+    text-align: center;
+}
+
+
+@media (max-width: 768px) {
+    .teacher-tabs .nav-link {
+        font-size: 1rem !important;
+        padding: 10px 15px;
+    }
+    .teacher-tab-content {
+        padding: 20px;
+    }
+    .card-title {
+        font-size: 1.2rem;
+    }
+    .card-body {
+        padding: 20px;
+    }
+    .teacher-accept-btn, .teacher-reject-btn, .teacher-upload-button, .teacher-modal-continue-btn, .teacher-modal-back-btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
 }

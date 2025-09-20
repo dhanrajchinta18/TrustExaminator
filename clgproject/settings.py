@@ -19,7 +19,8 @@ import ipfshttpclient
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Blockchain settings
-BLOCKCHAIN_CONTRACT_ADDRESS = "0x4931F347CBA29d932EB03375d6A1190cB0d08e83"  # Replace with your contract address
+BLOCKCHAIN_CONTRACT_ADDRESS = "0x92Ed8A23bcA57222aa02A3111F377fe4488851ce"  # Replace with your contract address
+# BLOCKCHAIN_CONTRACT_ADDRESS = "0x4931F347CBA29d932EB03375d6A1190cB0d08e83"  # Replace with your contract address
 BLOCKCHAIN_ABI_PATH = os.path.join(BASE_DIR, "TrustExaminerBlockchain", "build", "contracts", "PaperStorage.json")
 BLOCKCHAIN_GANACHE_URL = "http://127.0.0.1:7545"
 
@@ -38,7 +39,7 @@ IPFS_STORAGE_GATEWAY_URL = 'http://localhost:8080/ipfs/'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['*','localhost','127.0.0.1','198.162.0.107']
 
 
 # Application definition
@@ -146,6 +147,7 @@ STATICFILES_DIRS=[
     os.path.join(BASE_DIR,"static")
 ]
 
+# STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
 STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
 MEDIA_ROOT= os.path.join(BASE_DIR, 'media/')
 ENCRYPTION_ROOT= os.path.join(BASE_DIR, 'static/encrypted_files')

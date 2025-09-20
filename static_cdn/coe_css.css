@@ -1,42 +1,250 @@
-.alert{
-	text-align: center;
-	border-radius: 0 !important;
+.coe-alert {
+    text-align: center;
+	border-radius: 8px !important;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow */
 }
-.fstretch{
-	width: 100vw !important;
+.alert-success {
+    background-color: #e7f8ec;
+    border-color: #d3f4df;
+    color: #155724;
 }
-.stretch{
-	width: 50vw;
-	text-align: center;
+.alert-danger {
+    background-color: #fdeded;
+    border-color: #fbd9d9;
+    color: #721c24;
+}
+.close {
+    color: inherit;
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
+}
+.close:hover {
+    opacity: 1;
+}
+
+.coe-tabs {
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e9ecef; /* Lighter border */
+}
+.coe-tabs .nav-link {
+    font-size: 1.1rem !important;
+    color: #6c757d !important;
+    border: none; /* Removed borders */
+    border-bottom: 2px solid transparent; /* For active state indicator */
+    border-radius: 0; /* No border radius */
+    padding: 12px 20px;
+    transition: color 0.3s ease-in-out, border-bottom-color 0.3s ease-in-out; /* Border transition */
+    font-weight: 500;
+    margin-bottom: -2px; /* To align with border */
+}
+.coe-tabs .nav-link:hover {
+    background-color: transparent !important; /* No background on hover */
+    border-color: transparent transparent #e9ecef; /* Hover effect */
+    color: #495057 !important;
+    border-bottom-color: #007bff; /* Hover border color */
+}
+.coe-tabs .nav-link.active {
+    color: #007bff !important;
+    background-color: #fff;
+    border-color: #e9ecef #e9ecef #fff;
+    font-weight: 600;
+    border-bottom-color: #007bff; /* Active state border color */
+}
+
+.coe-tab-content {
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.coe-form, .coe-teacher-table, .coe-request-status-table {
+	width: 80vw !important;
 	margin: 0 auto;
+    max-width: 1000px; /* Maximum width for form and tables */
 }
-.text{
-	font-size: 20px !important;
-	color: rgba(0,0,0,0.5) !important;
+
+.form-group {
+    margin-bottom: 1.8rem; /* Increased spacing */
 }
-.active{
-	color: #49688e !important;
-}
-#form,.table-responsive{
-	width: 60vw !important;
-	margin: 0 auto;
-}
+
 .form-control{
 	box-shadow: none !important;
+    border-radius: 6px !important;
+    padding: 7px 16px;
+    border: 1px solid #ced4da !important;
+    font-size: 1rem;
 }
-.btn-primary{
-	margin: 0 10px 0 0;
-	background-color: #49688e !important;
+.form-control:focus{
+	border-color: #007bff !important;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+label {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.7rem;
+    display: block;
+}
+select.form-control {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='currentColor' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 98%; /* Adjusted arrow position */
+    background-position-y: 7px;
+    padding-right: 2.5rem; /* More space for arrow */
+    color: #495057; /* Ensure text color is set */
+}
+
+.coe-submit-btn, .coe-finalize-btn, .coe-modal-confirm-btn, .coe-modal-finalize-btn, .coe-transaction-btn {
+	margin: 0 8px 0 0; /* Reduced right margin */
+	background-color: #007bff !important;
 	border: none !important;
+    border-radius: 6px !important;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out; /* Added transform */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-.btn-primary:hover{
-	background-color: #007BFF !important;
+.coe-submit-btn:hover, .coe-finalize-btn:hover, .coe-modal-confirm-btn:hover, .coe-modal-finalize-btn:hover, .coe-transaction-btn:hover {
+	background-color: #0056b3 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-.btn:focus,.btn:focus:active{
-	box-shadow: none !important;
+.coe-submit-btn:focus,.coe-submit-btn:focus:active, .coe-finalize-btn:focus,.coe-finalize-btn:focus:active,
+.coe-modal-confirm-btn:focus,.coe-modal-confirm-btn:focus:active, .coe-modal-finalize-btn:focus,.coe-modal-finalize-btn:focus:active,
+.coe-transaction-btn:focus, .coe-transaction-btn:focus:active {
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5) !important;
 }
+.coe-finalize-btn { /* Secondary button style for finalize */
+    background-color: #6c757d !important;
+    border-color: #6c757d !important;
+    color: #fff;
+}
+.coe-finalize-btn:hover {
+    background-color: #545b62 !important;
+    border-color: #545b62 !important;
+}
+.coe-finalize-btn:focus, .coe-finalize-btn:active {
+    box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5) !important;
+}
+
+
 th{
-  color: #49688e !important;
-  font-weight: lighter !important;
-  font-size: 18px !important;
+  color: #495057 !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef !important; /* Lighter border */
+  padding: 14px 16px;
+  text-align: left;
+}
+td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e9ecef; /* Lighter border */
+}
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.coe-no-request-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    text-align: center;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.coe-latest-requests {
+    margin-bottom: 30px;
+}
+.coe-latest-requests h4 {
+    margin-bottom: 25px;
+    text-align: center;
+    color: #495057;
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+.coe-modal .modal-content {
+    border-radius: 10px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Stronger shadow for modals */
+}
+.coe-modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 25px;
+    border-radius: 10px 10px 0 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center; /* Center modal header text */
+}
+.coe-modal-body {
+    padding: 30px;
+}
+.coe-modal-footer {
+    border-top: 1px solid #e9ecef;
+    padding: 20px 25px;
+    border-radius: 0 0 10px 10px;
+    text-align: center; /* Center modal footer buttons */
+}
+.coe-modal-finalize-btn, .coe-modal-confirm-btn {
+    margin: 0 10px; /* Spacing between modal buttons */
+}
+
+.status-pending {
+    color: #ffc107; /* Yellow for pending status */
+    font-weight: 500;
+}
+.status-accepted {
+    color: #17a2b8; /* Cyan for accepted status */
+    font-weight: 500;
+}
+.status-completed {
+    color: #28a745; /* Green for completed status */
+    font-weight: 500;
+}
+
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .coe-form, .coe-teacher-table, .coe-request-status-table {
+        width: 95vw !important;
+    }
+    .coe-tabs .nav-link {
+        font-size: 1rem !important;
+        padding: 10px 15px;
+    }
+    .coe-tab-content {
+        padding: 20px;
+    }
+    th, td {
+        padding: 12px 14px;
+        font-size: 0.9rem;
+    }
+    .coe-modal-header {
+        font-size: 1.2rem;
+    }
+    .coe-modal-body, .coe-modal-footer {
+        padding: 20px;
+    }
+    .coe-submit-btn, .coe-finalize-btn, .coe-modal-confirm-btn, .coe-modal-finalize-btn, .coe-transaction-btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+    }
 }

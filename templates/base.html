@@ -1,30 +1,130 @@
 <!doctype html>
+
 <html>
 <head>
 <title>{% block title %}{% endblock %}</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet"> <!-- Modern Font -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 {% block link %}{% endblock %}
 <style type="text/css">
-	body{
-		font-family: 'Work Sans', sans-serif;
-		overflow-x: hidden !important;
-	}
-	.navbar{
-	  box-shadow: 0 8px 6px -9px #999;
-	}
+    body{
+        font-family: 'Nunito Sans', sans-serif; /* Modern Font Family */
+        overflow-x: hidden !important;
+        background-color: #f0f2f5; /* Very light gray background, softer */
+        color: #495057; /* Slightly lighter and friendlier text color */
+        -webkit-font-smoothing: antialiased; /* For smoother fonts on macOS/iOS */
+        -moz-osx-font-smoothing: grayscale; /* For smoother fonts on Firefox macOS */
+        line-height: 1.6; /* Improved line height for readability */
+    }
+    .navbar{
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Even more subtle shadow */
+        background-color: #fff; /* White navbar background */
+        padding: 12px 20px; /* Slightly reduced padding */
+        border-bottom: 1px solid #e9ecef; /* Light border for definition */
+    }
+    .navbar-brand {
+        font-weight: 700; /* Stronger font weight for brand */
+        color: #343a40 !important; /* Darker brand color for better contrast */
+        transition: color 0.3s ease-in-out; /* Smooth color transition */
+        font-size: 1.5rem; /* Slightly larger brand font size */
+    }
+    .navbar-brand:hover {
+        color: #007bff !important; /* Modern primary color hover */
+    }
+    .nav-link {
+        color: #6c757d !important; /* Muted nav link color */
+        font-weight: 600; /* Slightly bolder nav links */
+        padding: 0.5rem 1rem; /* Consistent padding */
+        transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out; /* Added background transition */
+        border-radius: 0.25rem; /* Slightly rounded nav links */
+        margin: 0 0.25rem; /* Spacing between nav links */
+    }
+    .nav-link:hover {
+        color: #fff !important; /* White hover color */
+        background-color: #007bff; /* Primary color background on hover */
+    }
+    .nav-item.active .nav-link { /* Style for active nav item */
+        color: #fff !important;
+        background-color: #007bff;
+    }
+    .block {
+        padding: 30px; /* Increased padding for content block */
+        margin-top: 20px; /* Add some top margin */
+        background-color: #fff; /* White block background */
+        border-radius: 8px; /* Rounded corners for content block */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); /* Soft shadow for content block */
+    }
+    .btn-primary {
+        background-color: #007bff !important; /* Modern primary color */
+        border-color: #007bff !important;
+        transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, transform 0.2s ease-in-out; /* Added transform transition */
+        border-radius: 0.3rem; /* Slightly more rounded buttons */
+        padding: 0.75rem 1.5rem; /* Adjusted button padding */
+        font-weight: 600; /* Bolder button text */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Added subtle shadow to buttons */
+    }
+    .btn-primary:hover {
+        background-color: #0056b3 !important; /* Darker shade on hover */
+        border-color: #0056b3 !important;
+        transform: translateY(-2px); /* Slight lift effect on hover */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Increased shadow on hover */
+    }
+    .btn-primary:focus, .btn-primary:active {
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5) !important; /* Focus shadow using primary color */
+    }
+    .btn-secondary { /* Example of a secondary button style if needed */
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: #fff;
+        transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+        border-radius: 0.3rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .btn-secondary:hover {
+        background-color: #545b62 !important;
+        border-color: #545b62 !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .btn-secondary:focus, .btn-secondary:active {
+        box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5) !important;
+    }
+/* Animation for content block */
+.block {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+Use code with caution.
 </style>
+<script>
+    // **Global Backdrop Removal for ALL Bootstrap Modals**
+    $(document).on('show.bs.modal', '.modal', function (e) {
+        $(this).data('bs.modal')._config.backdrop = false;
+    });
+</script>
 </head>
 <body>
   <nav class="navbar navbar-expand-sm">
   		{% block logo %}{% endblock %}
       <ul class="navbar-nav ml-auto">
+        {% if request.user.role == "coe" %}
+            <li class="nav-item">
+            <a class="nav-link" href="{% url 'transaction_history_coe' %}">Transaction History</a>
+            </li>
+        {% endif %}
         <li class="nav-item">
         	{% block logout_btn %}{% endblock%}
         </li>

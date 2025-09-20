@@ -7,37 +7,40 @@
 <link rel="stylesheet" type="text/css" href="{% static 'coe_css.css' %}">
 {% endblock %}
 
-{% block logo %}<a class="navbar-brand" style="color: #49688e;">{{request.user.first_name}}
+{% block logo %}<a class="navbar-brand" style="color: #343a40;">{{request.user.first_name}}
     {{request.user.last_name}}</a>{% endblock %}
 
 {% block logout_btn %}<a class="nav-link" href="{% url 'user_logout' %}"
-    style="color: #49688e; text-decoration: none;">Logout</a>{% endblock %}
+    style="color: #6c757d; text-decoration: none;">Logout</a>{% endblock %}
 
 {% block content %}
 
 {% if messages %}
 {% for message in messages %}
-<div class="alert alert-success alert-dismissible fade show" style="text-align: center; border-radius: 0;">
-    <button type="button" class="close" data-dismiss="alert">&times;</button>{{message}}
+<div class="alert alert-success alert-dismissible fade show coe-alert" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">×</span>
+    </button>
+    {{message}}
 </div>
 {% endfor %}
 {% endif %}
 
 <div class="alerts"></div>
 
-<ul class="nav nav-tabs fstretch" role="tablist">
-    <li class="nav-item stretch">
-        <a class="nav-link active text" data-toggle="tab" href="#prequest">Send Request</a>
+<ul class="nav nav-tabs nav-fill coe-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#prequest">Send Request</a>
     </li>
-    <li class="nav-item stretch">
-        <a class="nav-link text" data-toggle="tab" href="#arequest">Request Status</a>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#arequest">Request Status</a>
     </li>
 </ul>
 
-<div class="tab-content">
+<div class="tab-content coe-tab-content">
     <!-- Send Request Tab -->
     <div id="prequest" class="container tab-pane active"><br>
-        <form method="POST" id="form" submit-url="{% url 'get_teachers' %}">{% csrf_token %}
+        <form method="POST" id="form" class="coe-form" submit-url="{% url 'get_teachers' %}">{% csrf_token %}
             <div class="form-group">
                 <label for="course">Select Course:</label>
                 <select class="form-control" id="course" name="course" required>
@@ -76,16 +79,14 @@
                 </select>
                 <br><br>
                 <div style="text-align: center;">
-                    <button type="submit" class="btn btn-primary" style="width: 100px; margin: 0 40px 20px 40px;"
-                        id="f_submit">Submit</button>
+                    <button type="submit" class="btn btn-primary coe-submit-btn" id="f_submit">Submit</button>
                     <!-- When finalize is clicked, we want to fetch the pending finalization papers -->
-                    <button type="submit" class="btn btn-primary" style="width: 100px; margin: 0 40px 20px 40px;"
-                        data-toggle="modal" data-target="#myModal-1" id="finalize">Finalize</button>
+                    <button type="submit" class="btn btn-secondary coe-finalize-btn" data-toggle="modal" data-target="#myModal-1" id="finalize">Finalize</button>
                 </div>
             </div>
         </form>
 
-        <div class="table-responsive" style="margin-top: 100px; display: none;">
+        <div class="table-responsive coe-teacher-table" style="margin-top: 30px; display: none; opacity: 0;">
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -102,7 +103,7 @@
     <!-- Request Status Tab -->
     <div id="arequest" class="container tab-pane fade"><br>
         {% if arr %}
-        <div class="table-responsive table-hover" style="margin-top: 40px;">
+        <div class="table-responsive table-hover coe-request-status-table" style="margin-top: 20px;">
             <table class="table table-bordered" id="myTable">
                 <thead>
                     <tr>
@@ -115,11 +116,11 @@
                     <tr>
                         <td>{{ a.name }}</td>
                         {% if a.status == 'Pending' %}
-                        <td style="color: red;">{{ a.status }}</td>
+                        <td class="status-pending">{{ a.status }}</td>
                         {% elif a.status == 'Accepted' %}
-                        <td style="color: orange;">{{ a.status }}</td>
+                        <td class="status-accepted">{{ a.status }}</td>
                         {% else %}
-                        <td style="color: green;">{{ a.status }}</td>
+                        <td class="status-completed">{{ a.status }}</td>
                         {% endif %}
                     </tr>
                     {% endfor %}
@@ -127,15 +128,15 @@
             </table>
         </div>
         {% else %}
-        <div class="card bg-light text-dark no-request" style="margin-top: 40px;">
+        <div class="card bg-light text-dark no-request coe-no-request-card" style="margin-top: 20px;">
             <div class="card-body" style="text-align: center;">
                 No Sent Requests.
             </div>
         </div>
         {% endif %}
 
-        <div class="show" style="display: none;">
-            <h4 style="text-align: center; margin: 30px 0;">Latest Requests</h4>
+        <div class="show coe-latest-requests" style="display: none; margin-top: 30px;">
+            <h4 style="text-align: center; margin-bottom: 20px;">Latest Requests</h4>
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
                     <thead>
@@ -153,23 +154,23 @@
 </div>
 
 <!-- Finalize Modal -->
-<div class="modal fade" id="myModal-1">
+<div class="modal fade coe-modal" id="myModal-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" style="color: #49688e;">Select a Paper for Finalization</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <div class="modal-header coe-modal-header">
+                <h4 class="modal-title">Select a Paper for Finalization</h4>
+                <button type="button" class="close" data-dismiss="modal">×</button>
             </div>
             <!-- Modal body: list of pending finalization papers -->
             <form method="POST">{% csrf_token %}
                 <input type="text" name="s_code" id="s_code_field" style="display: none;">
                 <input type="text" name="t_id" id="t_id" style="display: none;">
-                <div class="modal-body final_teachers">
+                <div class="modal-body final_teachers coe-modal-body">
                     <!-- This will be populated by AJAX with radio buttons for each pending finalization paper -->
                 </div>
                 <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success" id="finalized">Finalize Paper</button>
+                <div class="modal-footer coe-modal-footer">
+                    <button type="submit" class="btn btn-success coe-modal-finalize-btn" id="finalized">Finalize Paper</button>
                 </div>
             </form>
         </div>
@@ -177,11 +178,11 @@
 </div>
 
 <!-- Modal for Sending Request -->
-<div class="modal fade" id="myModal">
+<div class="modal fade coe-modal" id="myModal">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-body">
-                <form method="POST" id="form-1" submit-url="{% url 'add_teacher' %}" enctype="multipart/form-data">{%csrf_token %}
+            <div class="modal-body coe-modal-body">
+                <form method="POST" id="form-1" class="coe-modal-form" submit-url="{% url 'add_teacher' %}" enctype="multipart/form-data">{%csrf_token %}
                     <input type="text" name="g_id" id="g_id" style="display: none;">
                     <div class="form-group">
                         <label for="s_code">Subject Code:</label>
@@ -209,8 +210,8 @@
                     </div>
             </div>
             <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-success">Confirm Request</button>
+            <div class="modal-footer coe-modal-footer">
+                <button type="submit" class="btn btn-primary coe-modal-confirm-btn">Confirm Request</button>
             </div>
             </form>
         </div>
@@ -232,6 +233,16 @@
 
         $('#finalize').click(function () {
             btn_click = 1;
+
+            // **Drastic Solution: Override Bootstrap Modal for #myModal-1 to prevent backdrop**
+            $('#myModal-1').modal = function (options) {
+                // Call the original Bootstrap modal function, but override backdrop option to 'false'
+                $.fn.modal.Constructor.prototype.show.call($('#myModal-1'), $.extend({}, options, { backdrop: false }));
+            };
+
+
+            // Now show the modal using the overridden function
+            $("#myModal-1").modal('show');
         });
 
         $('#form').submit(function () { // catch the form's submit event
@@ -260,9 +271,9 @@
                     } else {
                         if (dataTeachers.length > 0) {
                             $('.alerts').empty();
+                            $('.coe-teacher-table').css("display", "block").css("opacity", "0").animate({ opacity: 1 }, 300);
                             $('#getteachers').empty();
                             for (teacher of dataTeachers) {
-                                $('.table-responsive').css("display", "block");
                                 $('#s_code').val(s_code);
                                 $('#getteachers').append('<tr id="row_' + teacher["id"] + '"><td>' + teacher["first_name"] + " " + teacher["last_name"] + '</td><td>' + '<button class="btn btn-primary send_request" id="' + teacher["id"] + '">Send Request</button></td></tr>');
                             }
@@ -271,7 +282,7 @@
                             }, 500);
                         } else {
                             $(window).scrollTop(0);
-                            $(".alerts").html('<div class="alert alert-danger alert-dismissible fade show"><button type="button" class="close" data-dismiss="alert">&times;</button>No results found!</div>');
+                            $(".alerts").html('<div class="alert alert-danger alert-dismissible fade show coe-alert" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>No results found!</div>');
                         }
                     }
 
@@ -296,15 +307,15 @@
                 contentType: false,
                 success: function (new_data) {
                     var new_teacher = new_data.new_teacher;
-                    $('.show').css('display', 'block');
+                    $('.coe-latest-requests').css('display', 'block').hide().slideDown(300);
                     $('.card').css('display', 'none');
                     $('.alerts').empty();
-                    $(".alerts").html('<div class="alert alert-success alert-dismissible fade show"><button type="button" class="close" data-dismiss="alert">&times;</button>Request Sent! This request can be tracked in the Request Status section.</div>');
+                    $(".alerts").html('<div class="alert alert-success alert-dismissible fade show coe-alert" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>Request Sent! This request can be tracked in the Request Status section.</div>');
                     $("#myModal").modal("hide");
                     $("#row_" + g_id).remove();
                     $(window).scrollTop(0);
                     for (teacher of new_teacher) {
-                        $('#showteachers').append('<tr><td>' + teacher["first_name"] + " " + teacher["last_name"] + '</td><td style="color:red;"> Pending </td></tr>');
+                        $('#showteachers').append('<tr><td>' + teacher["first_name"] + " " + teacher["last_name"] + '</td><td class="status-pending"> Pending </td></tr>');
                     }
                 }
             });
@@ -316,5 +327,7 @@
         var fileName = $(this).val().split("\\").pop();
         $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
     });
+
+
 </script>
 {% endblock %}

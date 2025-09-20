@@ -1,43 +1,89 @@
-.card{
-	border: 1px solid #49688e !important;
-	font-size: 18px;
-	width: 40vw !important;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 60px;
-	padding: 0 !important;
-	/*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
-}
-.card-header{
-	text-align: center;
-	background-color: #49688e !important;
-	color: white;
-}
-.form-control{
-	border-radius: 0 !important;
-	color: black !important;
-}
-.form-control:focus{
-	border: 1px solid #49688e !important;
-	box-shadow: none !important;
-}
-.btn{
-	background-color: #49688e !important;
-	width: 160px;
-	border-radius: 3px !important;
-}
-.btn:hover{
-	opacity: 0.9 !important;
-}
-.btn:focus,.btn:focus:active{
-	box-shadow: none !important;
-}
-.button{
-	text-align: center; 
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px); /* Adjusted to new navbar height */
+    padding-top: 20px;
 }
 
-@media (max-width: 600px){
-	.card{
-		width: 80vw !important;
+.login-card{
+	border: none !important; /* Removed border */
+	font-size: 16px;
+	width: 32vw !important; /* Slightly reduced width */
+	margin: 0;
+	padding: 0 !important;
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Modern shadow */
+    border-radius: 10px; /* More rounded corners */
+    overflow: hidden;
+    background-color: #fff; /* White login card background */
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+.login-header{
+	text-align: center;
+	background-color: #007bff !important; /* Primary color header */
+	color: white;
+    padding: 20px 25px; /* Increased header padding */
+    font-size: 1.4rem; /* Adjusted header font size */
+    font-weight: 600;
+}
+
+.form-control{
+	border-radius: 6px !important; /* Rounded corners for inputs */
+	color: #495057 !important;
+	border: 1px solid #ced4da !important;
+	padding: 14px 16px; /* Increased input padding */
+    font-size: 1rem; /* Slightly larger input font */
+}
+.form-control:focus{
+	border-color: #007bff !important; /* Primary color focus border */
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important; /* Primary color focus shadow */
+}
+label {
+    color: #495057;
+    font-weight: 600;
+    margin-bottom: 0.6rem; /* Reduced label margin */
+    display: block;
+}
+.forgot-password {
+    font-size: 14px;
+    color: #6c757d;
+    float: right;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+.forgot-password:hover {
+    color: #007bff; /* Primary color hover for forgot password */
+}
+
+.login-btn{
+	width: 100%;
+	border-radius: 6px !important; /* Rounded corners for button */
+    padding: 14px 25px; /* Increased button padding */
+    font-size: 1.1rem; /* Larger button font size */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto; /* Auto width for button */
+}
+
+.button{
+	text-align: center;
+}
+
+@media (max-width: 768px){
+	.login-card{
+		width: 85vw !important; /* Wider card on smaller screens */
 	}
+    .login-header {
+        font-size: 1.3rem; /* Smaller header font on small screens */
+    }
+    .login-btn {
+        font-size: 1rem; /* Smaller button font on small screens */
+    }
 }
